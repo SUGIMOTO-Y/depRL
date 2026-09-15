@@ -61,7 +61,8 @@ class Sequential:
     def initialize(self, seed):
         # group seed is given, the others are determined from it
         for i, environment in enumerate(self.environments):
-            environment.seed(seed + i)
+            # environment.seed(seed + i)
+            environment.reset(seed=seed + i)
 
     def start(self):
         """Used once to get the initial observations."""

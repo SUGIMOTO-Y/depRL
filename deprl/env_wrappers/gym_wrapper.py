@@ -38,22 +38,40 @@ class GymWrapper(ExceptionWrapper):
             )
         self.error = (error_mjpy, error_mj, DummyException)[dummy_counter]
 
+    @property
+    def name(self):
+        spec = getattr(self.unwrapped, "spec", None)
+        if spec is not None and getattr(spec, "id", None):
+            return spec.id
+        return type(self.unwrapped).__name__
+
     def render(self, *args, **kwargs):
         kwargs["mode"] = "window"
         self.unwrapped.sim.render(*args, **kwargs)
 
+    # def muscle_lengths(self):
+    #     length = self.unwrapped.sim.data.actuator_length
+    #     return length
+
+    # def muscle_forces(self):
+    #     return self.unwrapped.sim.data.actuator_force
+
+    # def muscle_velocities(self):
+    #     return self.unwrapped.sim.data.actuator_velocity
+
+    # def muscle_activity(self):
+    #     return self.unwrapped.sim.data.act
     def muscle_lengths(self):
-        length = self.unwrapped.sim.data.actuator_length
-        return length
+        return self.unwrapped.muscle_lengths()
 
     def muscle_forces(self):
-        return self.unwrapped.sim.data.actuator_force
+        return self.unwrapped.muscle_forces()
 
     def muscle_velocities(self):
-        return self.unwrapped.sim.data.actuator_velocity
+        return self.unwrapped.muscle_velocities()
 
     def muscle_activity(self):
-        return self.unwrapped.sim.data.act
+        return self.unwrapped.mj_data.act
 
     @property
     def _max_episode_steps(self):
